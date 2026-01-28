@@ -16,7 +16,7 @@ export default defineConfig({
   external: ['react'],
   esbuildOptions(options) {
     options.banner = {
-      js: '/* @pushflo/sdk - https://pushflo.dev */',
+      js: '/* @pushflodev/sdk - https://pushflo.dev */',
     };
   },
 });
