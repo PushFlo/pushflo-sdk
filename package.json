@@ -1,6 +1,6 @@
 {
-  "name": "@pushflo/sdk",
-  "version": "1.0.0",
+  "name": "@pushflodev/sdk",
+  "version": "1.0.1",
   "description": "Official TypeScript SDK for PushFlo real-time messaging service",
   "author": "PushFlo",
   "license": "MIT",

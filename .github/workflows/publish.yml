@@ -51,23 +51,23 @@ jobs:
         with:
           name: v${{ steps.version.outputs.VERSION }}
           body: |
-            ## @pushflo/sdk v${{ steps.version.outputs.VERSION }}
+            ## @pushflodev/sdk v${{ steps.version.outputs.VERSION }}
 
             ### Installation
 
             ```bash
             # npm
-            npm install @pushflo/sdk@${{ steps.version.outputs.VERSION }}
+            npm install @pushflodev/sdk@${{ steps.version.outputs.VERSION }}
 
             # yarn
-            yarn add @pushflo/sdk@${{ steps.version.outputs.VERSION }}
+            yarn add @pushflodev/sdk@${{ steps.version.outputs.VERSION }}
 
             # pnpm
-            pnpm add @pushflo/sdk@${{ steps.version.outputs.VERSION }}
+            pnpm add @pushflodev/sdk@${{ steps.version.outputs.VERSION }}
             ```
 
             ### Links
-            - [npm package](https://www.npmjs.com/package/@pushflo/sdk/v/${{ steps.version.outputs.VERSION }})
+            - [npm package](https://www.npmjs.com/package/@pushflodev/sdk/v/${{ steps.version.outputs.VERSION }})
             - [Documentation](https://github.com/PushFlo/pushflo-sdk#readme)
           draft: false
           prerelease: ${{ contains(steps.version.outputs.VERSION, '-') }}

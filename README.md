@@ -1,4 +1,4 @@
-# @pushflo/sdk
+# @pushflodev/sdk
 
 Official TypeScript SDK for [PushFlo](https://pushflo.dev) real-time messaging service.
 
@@ -14,19 +14,19 @@ Official TypeScript SDK for [PushFlo](https://pushflo.dev) real-time messaging s
 
 ```bash
 # npm
-npm install @pushflo/sdk
+npm install @pushflodev/sdk
 
 # yarn
-yarn add @pushflo/sdk
+yarn add @pushflodev/sdk
 
 # pnpm
-pnpm add @pushflo/sdk
+pnpm add @pushflodev/sdk
 ```
 
 ## Quick Start - Browser (60 seconds)
 
 ```typescript
-import { PushFloClient } from '@pushflo/sdk';
+import { PushFloClient } from '@pushflodev/sdk';
 
 // 1. Create client
 const client = new PushFloClient({
@@ -53,7 +53,7 @@ client.disconnect();
 ## Quick Start - Server (60 seconds)
 
 ```typescript
-import { PushFloServer } from '@pushflo/sdk/server';
+import { PushFloServer } from '@pushflodev/sdk/server';
 
 // 1. Create server client
 const pushflo = new PushFloServer({
@@ -75,7 +75,7 @@ console.log('Delivered to:', result.delivered, 'subscribers');
 
 ```tsx
 // App.tsx - Wrap your app with provider
-import { PushFloProvider } from '@pushflo/sdk/react';
+import { PushFloProvider } from '@pushflodev/sdk/react';
 
 function App() {
   return (
@@ -86,7 +86,7 @@ function App() {
 }
 
 // NotificationList.tsx - Subscribe to channel
-import { useChannel } from '@pushflo/sdk/react';
+import { useChannel } from '@pushflodev/sdk/react';
 
 function NotificationList() {
   const { messages, connectionState } = useChannel('notifications');
@@ -113,7 +113,7 @@ function NotificationList() {
 ### Connection State Handling
 
 ```typescript
-import { PushFloClient, ConnectionState } from '@pushflo/sdk';
+import { PushFloClient, ConnectionState } from '@pushflodev/sdk';
 
 const client = new PushFloClient({ publishKey: 'pub_xxx' });
 
@@ -208,7 +208,7 @@ client.on('disconnected', (reason) => {
 ### Channel Management
 
 ```typescript
-import { PushFloServer } from '@pushflo/sdk/server';
+import { PushFloServer } from '@pushflodev/sdk/server';
 
 const pushflo = new PushFloServer({ secretKey: 'sec_xxx' });
 
@@ -246,7 +246,7 @@ console.log('Channel deleted');
 ### Message History
 
 ```typescript
-import { PushFloServer } from '@pushflo/sdk/server';
+import { PushFloServer } from '@pushflodev/sdk/server';
 
 const pushflo = new PushFloServer({ secretKey: 'sec_xxx' });
 
@@ -266,7 +266,7 @@ console.log(`Page ${pagination.page} of ${pagination.totalPages}`);
 ### Publishing with Event Types
 
 ```typescript
-import { PushFloServer } from '@pushflo/sdk/server';
+import { PushFloServer } from '@pushflodev/sdk/server';
 
 const pushflo = new PushFloServer({ secretKey: 'sec_xxx' });
 
@@ -308,7 +308,7 @@ const pushflo = new PushFloServer({
 ### Provider Options
 
 ```tsx
-import { PushFloProvider } from '@pushflo/sdk/react';
+import { PushFloProvider } from '@pushflodev/sdk/react';
 
 function App() {
   return (
@@ -327,7 +327,7 @@ function App() {
 ### usePushFlo Hook
 
 ```tsx
-import { usePushFlo } from '@pushflo/sdk/react';
+import { usePushFlo } from '@pushflodev/sdk/react';
 
 function Dashboard() {
   const { connectionState, isConnected, connect, disconnect } = usePushFlo();
@@ -345,7 +345,7 @@ function Dashboard() {
 ### useChannel Hook
 
 ```tsx
-import { useChannel } from '@pushflo/sdk/react';
+import { useChannel } from '@pushflodev/sdk/react';
 
 function NotificationBell() {
   const { messages, lastMessage, clearMessages, isSubscribed } = useChannel('notifications', {
@@ -374,7 +374,7 @@ import {
   PushFloError,
   ConnectionError,
   AuthenticationError
-} from '@pushflo/sdk';
+} from '@pushflodev/sdk';
 
 const client = new PushFloClient({ publishKey: 'pub_xxx' });
 
@@ -451,7 +451,7 @@ import type {
   // Subscriptions
   Subscription,
   SubscriptionOptions,
-} from '@pushflo/sdk';
+} from '@pushflodev/sdk';
 ```
 
 ## API Keys
@@ -492,7 +492,7 @@ The browser client requires `WebSocket` which is not available on the server. Us
 // Next.js App Router
 'use client';
 
-import { PushFloProvider } from '@pushflo/sdk/react';
+import { PushFloProvider } from '@pushflodev/sdk/react';
 ```
 
 ## License
