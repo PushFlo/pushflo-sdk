@@ -14,11 +14,12 @@ describe('calculateBackoff', () => {
       calculateBackoff(attempt, { initialDelay: 1000, maxDelay: 100000, multiplier: 2 })
     );
 
-    // Each delay should be roughly double the previous (accounting for jitter)
+    // Each delay should be roughly double the previous (accounting for ±25% jitter)
+    // Worst case ratio: (2 * 1.25) / (1 * 0.75) = 3.33
     for (let i = 1; i < delays.length; i++) {
       const ratio = delays[i]! / delays[i - 1]!;
-      expect(ratio).toBeGreaterThan(1.3); // Allow for jitter
-      expect(ratio).toBeLessThan(3);
+      expect(ratio).toBeGreaterThan(1.2); // Allow for jitter
+      expect(ratio).toBeLessThan(3.5);
     }
   });
 
