@@ -53,6 +53,10 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src tests",
+    "release": "./scripts/release.sh",
+    "release:patch": "./scripts/release.sh patch",
+    "release:minor": "./scripts/release.sh minor",
+    "release:major": "./scripts/release.sh major",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
@@ -87,10 +91,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/pushflo/sdk.git"
+    "url": "https://github.com/PushFlo/pushflo-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/pushflo/sdk/issues"
+    "url": "https://github.com/PushFlo/pushflo-sdk/issues"
   },
   "homepage": "https://pushflo.dev",
   "engines": {
