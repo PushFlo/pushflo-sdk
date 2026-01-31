@@ -184,7 +184,12 @@ export class RestClient {
 
     // Parse JSON response
     try {
-      return (await response.json()) as T;
+      const json = await response.json();
+      // Handle wrapped responses: {success: true, data: ...}
+      if (json && typeof json === 'object' && 'success' in json && 'data' in json) {
+        return json.data as T;
+      }
+      return json as T;
     } catch {
       throw new NetworkError('Failed to parse response', 'PARSE_ERROR', { retryable: false });
     }
