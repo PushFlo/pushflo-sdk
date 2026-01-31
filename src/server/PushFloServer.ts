@@ -1,6 +1,8 @@
 import { RestClient } from './RestClient.js';
 import { API_PATHS, DEFAULTS } from '../utils/constants.js';
 import { AuthenticationError } from '../errors/AuthenticationError.js';
+import { ValidationError } from '../errors/ValidationError.js';
+import { validateChannelSlug } from '../utils/validation.js';
 import type { ServerOptions } from '../types/connection.js';
 import type {
   Channel,
@@ -78,13 +80,17 @@ export class PushFloServer {
    * Get a channel by slug
    */
   async getChannel(slug: string): Promise<Channel> {
+    this.validateSlug(slug);
     return this.client.get<Channel>(API_PATHS.CHANNEL(slug));
   }
 
   /**
    * Create a new channel
+   *
+   * @throws {ValidationError} If the channel slug is invalid
    */
   async createChannel(input: ChannelInput): Promise<Channel> {
+    this.validateSlug(input.slug);
     return this.client.post<Channel>(API_PATHS.CHANNELS, input);
   }
 
@@ -92,6 +98,7 @@ export class PushFloServer {
    * Update an existing channel
    */
   async updateChannel(slug: string, input: ChannelUpdateInput): Promise<Channel> {
+    this.validateSlug(slug);
     return this.client.patch<Channel>(API_PATHS.CHANNEL(slug), input);
   }
 
@@ -99,7 +106,22 @@ export class PushFloServer {
    * Delete a channel
    */
   async deleteChannel(slug: string): Promise<void> {
+    this.validateSlug(slug);
     await this.client.delete<void>(API_PATHS.CHANNEL(slug));
+  }
+
+  /**
+   * Validate a channel slug and throw if invalid
+   */
+  private validateSlug(slug: string): void {
+    const result = validateChannelSlug(slug);
+    if (!result.valid) {
+      const error = ValidationError.invalidChannelSlug(slug);
+      if (result.suggestion) {
+        error.message += `. Suggested: '${result.suggestion}'`;
+      }
+      throw error;
+    }
   }
 
   // ============================================
@@ -108,12 +130,15 @@ export class PushFloServer {
 
   /**
    * Publish a message to a channel
+   *
+   * @throws {ValidationError} If the channel slug is invalid
    */
   async publish(
     channel: string,
     content: Record<string, unknown>,
     options: PublishOptions = {}
   ): Promise<PublishResult> {
+    this.validateSlug(channel);
     return this.client.post<PublishResult>(API_PATHS.CHANNEL_MESSAGES(channel), {
       content,
       eventType: options.eventType ?? 'message',
@@ -122,11 +147,14 @@ export class PushFloServer {
 
   /**
    * Get message history for a channel
+   *
+   * @throws {ValidationError} If the channel slug is invalid
    */
   async getMessageHistory(
     channel: string,
     options: MessageHistoryOptions = {}
   ): Promise<{ messages: Message[]; pagination: Pagination }> {
+    this.validateSlug(channel);
     const response = await this.client.get<MessagesResponse>(
       API_PATHS.CHANNEL_MESSAGES(channel),
       {

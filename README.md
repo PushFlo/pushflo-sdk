@@ -409,6 +409,67 @@ client.on('error', (error) => {
 | `ConnectionError` | WebSocket connection issues | Yes |
 | `AuthenticationError` | Invalid/missing API key | No |
 | `NetworkError` | HTTP request failures | Varies |
+| `ValidationError` | Invalid input (e.g., channel slug) | No |
+
+## Channel Naming Rules
+
+Channel slugs must follow these rules:
+
+| Rule | Valid | Invalid |
+|------|-------|---------|
+| Lowercase only | `my-channel` | `My-Channel` |
+| Letters, numbers, hyphens | `channel-123` | `channel:123` |
+| No special characters | `my-channel` | `my_channel`, `my.channel` |
+| No leading/trailing hyphens | `my-channel` | `-channel`, `channel-` |
+| No consecutive hyphens | `my-channel` | `my--channel` |
+| 1-64 characters | `a` to 64 chars | empty or >64 chars |
+
+### Validation Utilities
+
+```typescript
+import {
+  isValidChannelSlug,
+  toChannelSlug,
+  validateChannelSlug,
+} from '@pushflodev/sdk';
+
+// Check if valid
+isValidChannelSlug('my-channel');     // true
+isValidChannelSlug('my:channel');     // false
+
+// Convert to valid slug
+toChannelSlug('My Channel!');         // 'my-channel'
+toChannelSlug('user:123:messages');   // 'user-123-messages'
+
+// Detailed validation with suggestions
+const result = validateChannelSlug('My:Channel');
+// {
+//   valid: false,
+//   error: "Channel slug contains invalid characters: :. Only lowercase letters, numbers, and hyphens are allowed.",
+//   suggestion: "my-channel"
+// }
+```
+
+### Auto-Creating Channels
+
+If you need to auto-create channels with dynamic names, use `toChannelSlug()` to ensure valid slugs:
+
+```typescript
+import { PushFloServer, toChannelSlug } from '@pushflodev/sdk/server';
+
+const server = new PushFloServer({ secretKey: 'sec_xxx' });
+
+// Convert dynamic names to valid slugs
+const orgId = 'org_abc123';
+const brandId = 'brand_xyz789';
+const channelSlug = toChannelSlug(`${orgId}-${brandId}-notifications`);
+// Result: 'org-abc123-brand-xyz789-notifications'
+
+await server.createChannel({
+  name: 'Brand Notifications',
+  slug: channelSlug,
+});
+```
 
 ## Environment Variables
 

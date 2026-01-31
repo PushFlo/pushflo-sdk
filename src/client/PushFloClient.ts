@@ -3,6 +3,8 @@ import { DEFAULTS, WS_SERVER_MESSAGES, ERROR_CODES } from '../utils/constants.js
 import { createLogger, type Logger } from '../utils/logger.js';
 import { AuthenticationError } from '../errors/AuthenticationError.js';
 import { PushFloError } from '../errors/PushFloError.js';
+import { ValidationError } from '../errors/ValidationError.js';
+import { isValidChannelSlug } from '../utils/validation.js';
 import { WebSocketManager } from './WebSocketManager.js';
 import { SubscriptionManager } from './SubscriptionManager.js';
 import type { ConnectionState, ClientOptions, ConnectionInfo } from '../types/connection.js';
@@ -120,10 +122,16 @@ export class PushFloClient extends TypedEventEmitter<PushFloClientEvents> {
 
   /**
    * Subscribe to a channel
+   *
+   * @throws {ValidationError} If the channel slug is invalid
    */
   subscribe(channel: string, options: SubscriptionOptions = {}): Subscription {
     if (!channel) {
       throw new PushFloError('Channel is required', 'INVALID_CHANNEL', { retryable: false });
+    }
+
+    if (!isValidChannelSlug(channel)) {
+      throw ValidationError.invalidChannelSlug(channel);
     }
 
     this.logger.debug('Subscribing to channel:', channel);
