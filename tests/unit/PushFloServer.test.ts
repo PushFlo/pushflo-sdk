@@ -258,7 +258,7 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          messages: [
+          items: [
             {
               id: 'msg-1',
               channel: 'test-channel',
@@ -282,7 +282,7 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          messages: [],
+          items: [],
           pagination: { page: 1, pageSize: 25, total: 0, totalPages: 0 },
         })
       );
