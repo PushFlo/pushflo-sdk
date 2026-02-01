@@ -72,20 +72,20 @@ export interface WsServerMessage {
   /** Message type */
   type: 'connected' | 'subscribed' | 'unsubscribed' | 'message' | 'error' | 'pong';
 
-  /** Client ID (for connected) */
+  /** Client ID (for connected, or sender for message) */
   clientId?: string;
 
   /** Channel slug (for subscribed/unsubscribed/message) */
   channel?: string;
 
-  /** Message data (for message) */
-  message?: {
-    id: string;
-    eventType: string;
-    clientId: string;
-    content: Record<string, unknown>;
-    timestamp: number;
-  };
+  /** Message ID (for message) */
+  messageId?: string;
+
+  /** Event type (for message) */
+  eventType?: string;
+
+  /** Message payload (for message) */
+  data?: Record<string, unknown>;
 
   /** Error message (for error) */
   error?: string;

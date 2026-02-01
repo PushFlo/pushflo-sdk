@@ -237,14 +237,14 @@ export class PushFloClient extends TypedEventEmitter<PushFloClientEvents> {
         break;
 
       case WS_SERVER_MESSAGES.MESSAGE:
-        if (message.channel && message.message) {
+        if (message.channel && message.messageId) {
           const fullMessage: Message = {
-            id: message.message.id,
+            id: message.messageId,
             channel: message.channel,
-            eventType: message.message.eventType,
-            clientId: message.message.clientId,
-            content: message.message.content,
-            timestamp: message.message.timestamp,
+            eventType: message.eventType ?? 'message',
+            clientId: message.clientId ?? '',
+            content: message.data ?? {},
+            timestamp: message.timestamp ?? Date.now(),
           };
 
           // Notify subscription handler

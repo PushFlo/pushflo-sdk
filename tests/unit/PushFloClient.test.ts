@@ -180,17 +180,15 @@ describe('PushFloClient', () => {
       // Simulate subscription confirmation
       ws.simulateMessage({ type: 'subscribed', channel: 'test-channel' });
 
-      // Simulate incoming message
+      // Simulate incoming message (flat format from server)
       ws.simulateMessage({
         type: 'message',
         channel: 'test-channel',
-        message: {
-          id: 'msg-1',
-          eventType: 'message',
-          clientId: 'other-client',
-          content: { text: 'hello' },
-          timestamp: Date.now(),
-        },
+        messageId: 'msg-1',
+        eventType: 'message',
+        clientId: 'other-client',
+        data: { text: 'hello' },
+        timestamp: Date.now(),
       });
 
       expect(onMessage).toHaveBeenCalledWith(
