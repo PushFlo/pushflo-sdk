@@ -2,14 +2,14 @@
  * Channel slug validation utilities
  *
  * Channel slugs must follow these rules:
- * - 1-64 characters long
+ * - 1-128 characters long
  * - Lowercase letters (a-z), numbers (0-9), and hyphens (-) only
  * - Cannot start or end with a hyphen
  * - Cannot have consecutive hyphens
  */
 
 /** Maximum length for a channel slug */
-export const MAX_SLUG_LENGTH = 64;
+export const MAX_SLUG_LENGTH = 128;
 
 /** Minimum length for a channel slug */
 export const MIN_SLUG_LENGTH = 1;

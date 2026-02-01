@@ -94,7 +94,7 @@ describe('Channel Slug Validation', () => {
     });
 
     it('should truncate to max length', () => {
-      const longStr = 'a'.repeat(100);
+      const longStr = 'a'.repeat(200);
       expect(toChannelSlug(longStr).length).toBe(MAX_SLUG_LENGTH);
     });
   });
@@ -157,7 +157,7 @@ describe('Channel Slug Validation', () => {
   describe('constants', () => {
     it('should have sensible defaults', () => {
       expect(MIN_SLUG_LENGTH).toBe(1);
-      expect(MAX_SLUG_LENGTH).toBe(64);
+      expect(MAX_SLUG_LENGTH).toBe(128);
     });
   });
 });

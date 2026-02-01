@@ -425,7 +425,7 @@ Channel slugs must follow these rules:
 | No special characters | `my-channel` | `my_channel`, `my.channel` |
 | No leading/trailing hyphens | `my-channel` | `-channel`, `channel-` |
 | No consecutive hyphens | `my-channel` | `my--channel` |
-| 1-64 characters | `a` to 64 chars | empty or >64 chars |
+| 1-128 characters | `a` to 128 chars | empty or >128 chars |
 
 ### Validation Utilities
 
