@@ -48,6 +48,9 @@ const subscription = client.subscribe('notifications', {
 // 4. Cleanup when done
 subscription.unsubscribe();
 client.disconnect();
+
+// 5. Clean up all resources (optional - for complete teardown)
+client.destroy();
 ```
 
 ## Quick Start - Server (60 seconds)

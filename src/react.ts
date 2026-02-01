@@ -19,6 +19,15 @@ export {
   type UseChannelResult,
 } from './react/useChannel.js';
 
+// Re-export errors for convenience (matches main entry point)
+export {
+  PushFloError,
+  ConnectionError,
+  AuthenticationError,
+  NetworkError,
+  ValidationError,
+} from './errors/index.js';
+
 // Re-export common types for convenience
 export type {
   ConnectionState,

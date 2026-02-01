@@ -115,19 +115,19 @@ export function installMockWebSocket(): {
   const originalWebSocket = globalThis.WebSocket;
 
   // Create a mock constructor that tracks instances
-  const MockWebSocketConstructor = vi.fn((url: string) => {
+  const MockWebSocketConstructor = vi.fn(function (this: MockWebSocket, url: string) {
     const instance = new MockWebSocket(url);
     instances.push(instance);
     return instance;
-  });
+  }) as unknown as typeof WebSocket;
 
-  // Add static properties
-  Object.defineProperty(MockWebSocketConstructor, 'CONNECTING', { value: 0 });
-  Object.defineProperty(MockWebSocketConstructor, 'OPEN', { value: 1 });
-  Object.defineProperty(MockWebSocketConstructor, 'CLOSING', { value: 2 });
-  Object.defineProperty(MockWebSocketConstructor, 'CLOSED', { value: 3 });
+  // Add static properties - must be enumerable and configurable for proper access
+  Object.defineProperty(MockWebSocketConstructor, 'CONNECTING', { value: 0, enumerable: true });
+  Object.defineProperty(MockWebSocketConstructor, 'OPEN', { value: 1, enumerable: true });
+  Object.defineProperty(MockWebSocketConstructor, 'CLOSING', { value: 2, enumerable: true });
+  Object.defineProperty(MockWebSocketConstructor, 'CLOSED', { value: 3, enumerable: true });
 
-  globalThis.WebSocket = MockWebSocketConstructor as unknown as typeof WebSocket;
+  globalThis.WebSocket = MockWebSocketConstructor;
 
   return {
     instances,
