@@ -85,14 +85,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Debug API URL
-        run: |
-          echo "API URL is set: ${{ secrets.PUSHFLO_API_URL != '' }}"
-
       - name: Run integration tests
         env:
           PUSHFLO_SECRET_KEY: ${{ secrets.PUSHFLO_SECRET_KEY }}
           PUSHFLO_MGMT_KEY: ${{ secrets.PUSHFLO_MGMT_KEY }}
-          PUSHFLO_PUB_KEY: ${{ secrets.PUSHFLO_PUB_KEY }}
           PUSHFLO_API_URL: ${{ secrets.PUSHFLO_API_URL }}
+          PUSHFLO_CONSOLE_URL: ${{ secrets.PUSHFLO_CONSOLE_URL }}
         run: npm run test:integration

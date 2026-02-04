@@ -42,11 +42,14 @@ export interface ClientOptions {
  * Options for creating a PushFlo server client
  */
 export interface ServerOptions {
-  /** Secret key for read/write access (sec_xxx) */
+  /** Secret key for read/write access (sec_xxx or mgmt_xxx) */
   secretKey: string;
 
-  /** Base URL for the PushFlo API */
+  /** Base URL for the PushFlo Realtime API (publish, message history) */
   baseUrl?: string;
+
+  /** Base URL for the PushFlo Console API (channel management) */
+  consoleUrl?: string;
 
   /** Request timeout in milliseconds */
   timeout?: number;

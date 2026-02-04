@@ -2,8 +2,11 @@
  * Default configuration values
  */
 export const DEFAULTS = {
-  /** Default PushFlo API base URL */
+  /** Default PushFlo Realtime API base URL */
   BASE_URL: 'https://api.pushflo.dev',
+
+  /** Default PushFlo Console API base URL (for channel management) */
+  CONSOLE_URL: 'https://console.pushflo.dev',
 
   /** WebSocket endpoint path */
   WS_PATH: '/ws',

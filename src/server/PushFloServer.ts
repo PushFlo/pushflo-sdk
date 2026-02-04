@@ -30,9 +30,16 @@ interface MessagesResponse {
 
 /**
  * Server-side PushFlo client for publishing messages and managing channels
+ *
+ * Uses two different APIs:
+ * - Realtime API (api.pushflo.dev): publish messages, message history
+ * - Console API (console.pushflo.dev): channel CRUD operations
  */
 export class PushFloServer {
-  private readonly client: RestClient;
+  /** Client for Realtime API (publish, message history) */
+  private readonly realtimeClient: RestClient;
+  /** Client for Console API (channel CRUD) */
+  private readonly consoleClient: RestClient;
 
   constructor(options: ServerOptions) {
     if (!options.secretKey) {
@@ -46,9 +53,19 @@ export class PushFloServer {
       throw AuthenticationError.invalidKey('secret');
     }
 
-    this.client = new RestClient({
+    // Realtime API client for publish and message history
+    this.realtimeClient = new RestClient({
       apiKey: options.secretKey,
-      baseUrl: options.baseUrl,
+      baseUrl: options.baseUrl ?? DEFAULTS.BASE_URL,
+      timeout: options.timeout,
+      retryAttempts: options.retryAttempts,
+      debug: options.debug,
+    });
+
+    // Console API client for channel management
+    this.consoleClient = new RestClient({
+      apiKey: options.secretKey,
+      baseUrl: options.consoleUrl ?? DEFAULTS.CONSOLE_URL,
       timeout: options.timeout,
       retryAttempts: options.retryAttempts,
       debug: options.debug,
@@ -56,16 +73,17 @@ export class PushFloServer {
   }
 
   // ============================================
-  // Channel Management
+  // Channel Management (Console API)
   // ============================================
 
   /**
    * List all channels
+   * @note Requires mgmt_ key. Uses Console API.
    */
   async listChannels(
     options: ListChannelsOptions = {}
   ): Promise<{ channels: Channel[]; pagination: Pagination }> {
-    const response = await this.client.get<ChannelsResponse>(API_PATHS.CHANNELS, {
+    const response = await this.consoleClient.get<ChannelsResponse>(API_PATHS.CHANNELS, {
       page: options.page,
       pageSize: options.pageSize ?? DEFAULTS.PAGE_SIZE,
     });
@@ -78,36 +96,39 @@ export class PushFloServer {
 
   /**
    * Get a channel by slug
+   * @note Requires mgmt_ key. Uses Console API.
    */
   async getChannel(slug: string): Promise<Channel> {
     this.validateSlug(slug);
-    return this.client.get<Channel>(API_PATHS.CHANNEL(slug));
+    return this.consoleClient.get<Channel>(API_PATHS.CHANNEL(slug));
   }
 
   /**
    * Create a new channel
-   *
+   * @note Requires mgmt_ key. Uses Console API.
    * @throws {ValidationError} If the channel slug is invalid
    */
   async createChannel(input: ChannelInput): Promise<Channel> {
     this.validateSlug(input.slug);
-    return this.client.post<Channel>(API_PATHS.CHANNELS, input);
+    return this.consoleClient.post<Channel>(API_PATHS.CHANNELS, input);
   }
 
   /**
    * Update an existing channel
+   * @note Requires mgmt_ key. Uses Console API.
    */
   async updateChannel(slug: string, input: ChannelUpdateInput): Promise<Channel> {
     this.validateSlug(slug);
-    return this.client.patch<Channel>(API_PATHS.CHANNEL(slug), input);
+    return this.consoleClient.patch<Channel>(API_PATHS.CHANNEL(slug), input);
   }
 
   /**
    * Delete a channel
+   * @note Requires mgmt_ key. Uses Console API.
    */
   async deleteChannel(slug: string): Promise<void> {
     this.validateSlug(slug);
-    await this.client.delete<void>(API_PATHS.CHANNEL(slug));
+    await this.consoleClient.delete<void>(API_PATHS.CHANNEL(slug));
   }
 
   /**
@@ -125,12 +146,12 @@ export class PushFloServer {
   }
 
   // ============================================
-  // Message Publishing
+  // Message Publishing (Realtime API)
   // ============================================
 
   /**
    * Publish a message to a channel
-   *
+   * @note Uses Realtime API. Works with sec_ or mgmt_ key.
    * @throws {ValidationError} If the channel slug is invalid
    */
   async publish(
@@ -139,7 +160,7 @@ export class PushFloServer {
     options: PublishOptions = {}
   ): Promise<PublishResult> {
     this.validateSlug(channel);
-    return this.client.post<PublishResult>(API_PATHS.CHANNEL_MESSAGES(channel), {
+    return this.realtimeClient.post<PublishResult>(API_PATHS.CHANNEL_MESSAGES(channel), {
       content,
       eventType: options.eventType ?? 'message',
     });
@@ -147,7 +168,7 @@ export class PushFloServer {
 
   /**
    * Get message history for a channel
-   *
+   * @note Uses Realtime API. Works with sec_ or mgmt_ key.
    * @throws {ValidationError} If the channel slug is invalid
    */
   async getMessageHistory(
@@ -155,7 +176,7 @@ export class PushFloServer {
     options: MessageHistoryOptions = {}
   ): Promise<{ messages: Message[]; pagination: Pagination }> {
     this.validateSlug(channel);
-    const response = await this.client.get<MessagesResponse>(
+    const response = await this.realtimeClient.get<MessagesResponse>(
       API_PATHS.CHANNEL_MESSAGES(channel),
       {
         page: options.page,
