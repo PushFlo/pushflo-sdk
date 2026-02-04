@@ -187,6 +187,10 @@ export class RestClient {
       const json = await response.json();
       // Handle wrapped responses: {success: true, data: ...}
       if (json && typeof json === 'object' && 'success' in json && 'data' in json) {
+        // If pagination exists alongside data, preserve both for paginated responses
+        if ('pagination' in json) {
+          return { data: json.data, pagination: json.pagination } as T;
+        }
         return json.data as T;
       }
       return json as T;

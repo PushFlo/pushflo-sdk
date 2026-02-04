@@ -36,8 +36,8 @@ export interface PublishResult {
   /** Unique message ID */
   id: string;
 
-  /** Channel the message was published to */
-  channel: string;
+  /** Channel slug the message was published to */
+  channelSlug: string;
 
   /** Number of subscribers the message was delivered to */
   delivered: number;

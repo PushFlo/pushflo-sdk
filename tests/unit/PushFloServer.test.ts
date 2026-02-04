@@ -53,7 +53,8 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          channels: [
+          success: true,
+          data: [
             { id: '1', name: 'Test', slug: 'test' },
           ],
           pagination: { page: 1, pageSize: 25, total: 1, totalPages: 1 },
@@ -71,7 +72,8 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          channels: [],
+          success: true,
+          data: [],
           pagination: { page: 2, pageSize: 10, total: 20, totalPages: 2 },
         })
       );
@@ -94,9 +96,12 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          id: '1',
-          name: 'Test Channel',
-          slug: 'test-channel',
+          success: true,
+          data: {
+            id: '1',
+            name: 'Test Channel',
+            slug: 'test-channel',
+          },
         })
       );
 
@@ -124,9 +129,12 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          id: '1',
-          name: 'New Channel',
-          slug: 'new-channel',
+          success: true,
+          data: {
+            id: '1',
+            name: 'New Channel',
+            slug: 'new-channel',
+          },
         })
       );
 
@@ -154,9 +162,12 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          id: '1',
-          name: 'Updated Name',
-          slug: 'test-channel',
+          success: true,
+          data: {
+            id: '1',
+            name: 'Updated Name',
+            slug: 'test-channel',
+          },
         })
       );
 
@@ -201,16 +212,20 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          id: 'msg-1',
-          channel: 'test-channel',
-          delivered: 5,
-          timestamp: Date.now(),
+          success: true,
+          data: {
+            id: 'msg-1',
+            channelSlug: 'test-channel',
+            delivered: 5,
+            timestamp: Date.now(),
+          },
         })
       );
 
       const result = await server.publish('test-channel', { text: 'hello' });
 
       expect(result.id).toBe('msg-1');
+      expect(result.channelSlug).toBe('test-channel');
       expect(result.delivered).toBe(5);
       expect(mockFetch).toHaveBeenCalledWith(
         expect.stringContaining('/channels/test-channel/messages'),
@@ -228,10 +243,13 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          id: 'msg-1',
-          channel: 'test-channel',
-          delivered: 1,
-          timestamp: Date.now(),
+          success: true,
+          data: {
+            id: 'msg-1',
+            channelSlug: 'test-channel',
+            delivered: 1,
+            timestamp: Date.now(),
+          },
         })
       );
 
@@ -258,7 +276,8 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          items: [
+          success: true,
+          data: [
             {
               id: 'msg-1',
               channel: 'test-channel',
@@ -282,7 +301,8 @@ describe('PushFloServer', () => {
       const server = createServer();
       mockFetch.mockReturnValue(
         mockResponse({
-          items: [],
+          success: true,
+          data: [],
           pagination: { page: 1, pageSize: 25, total: 0, totalPages: 0 },
         })
       );
@@ -303,7 +323,7 @@ describe('PushFloServer', () => {
   describe('authentication', () => {
     it('should include Authorization header', async () => {
       const server = createServer({ secretKey: 'sec_mykey' });
-      mockFetch.mockReturnValue(mockResponse({ channels: [], pagination: {} }));
+      mockFetch.mockReturnValue(mockResponse({ success: true, data: [], pagination: {} }));
 
       await server.listChannels();
 
@@ -338,7 +358,7 @@ describe('PushFloServer', () => {
       const server = createServer({ retryAttempts: 2 });
       mockFetch
         .mockReturnValueOnce(mockResponse({}, 500))
-        .mockReturnValueOnce(mockResponse({ channels: [], pagination: {} }));
+        .mockReturnValueOnce(mockResponse({ success: true, data: [], pagination: {} }));
 
       const result = await server.listChannels();
 

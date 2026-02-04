@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Test
+    name: Unit Tests
     runs-on: ubuntu-latest
 
     strategy:
@@ -31,7 +31,7 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
-      - name: Run tests
+      - name: Run unit tests
         run: npm test
 
       - name: Build
@@ -62,3 +62,32 @@ jobs:
         with:
           file: ./coverage/coverage-final.json
           fail_ci_if_error: false
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    # Only run integration tests on develop branch pushes
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run integration tests
+        env:
+          PUSHFLO_SECRET_KEY: ${{ secrets.PUSHFLO_SECRET_KEY }}
+          PUSHFLO_MGMT_KEY: ${{ secrets.PUSHFLO_MGMT_KEY }}
+          PUSHFLO_PUB_KEY: ${{ secrets.PUSHFLO_PUB_KEY }}
+        run: npm run test:integration

@@ -19,12 +19,12 @@ import type {
 import type { Pagination } from '../types/api.js';
 
 interface ChannelsResponse {
-  channels: Channel[];
+  data: Channel[];
   pagination: Pagination;
 }
 
 interface MessagesResponse {
-  items: Message[];
+  data: Message[];
   pagination: Pagination;
 }
 
@@ -71,7 +71,7 @@ export class PushFloServer {
     });
 
     return {
-      channels: response.channels,
+      channels: response.data,
       pagination: response.pagination,
     };
   }
@@ -167,7 +167,7 @@ export class PushFloServer {
     );
 
     return {
-      messages: response.items,
+      messages: response.data,
       pagination: response.pagination,
     };
   }
