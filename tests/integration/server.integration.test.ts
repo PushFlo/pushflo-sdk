@@ -29,16 +29,23 @@ describeIntegration('PushFloServer Integration Tests', () => {
   let createdChannelSlug: string | null = null;
 
   beforeAll(() => {
+    console.log('Integration test config:');
+    console.log('  - API URL:', baseUrl || 'https://api.pushflo.dev (default)');
+    console.log('  - Secret key prefix:', secretKey?.substring(0, 4) || 'not set');
+    console.log('  - Mgmt key prefix:', mgmtKey?.substring(0, 5) || 'not set');
+
     server = new PushFloServer({
       secretKey,
       baseUrl,
       timeout: 30000,
+      debug: true,
     });
 
     mgmtServer = new PushFloServer({
       secretKey: mgmtKey,
       baseUrl,
       timeout: 30000,
+      debug: true,
     });
   });
 
