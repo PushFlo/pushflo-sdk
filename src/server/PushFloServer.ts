@@ -56,7 +56,7 @@ export class PushFloServer {
     // Realtime API client for publish and message history
     this.realtimeClient = new RestClient({
       apiKey: options.secretKey,
-      baseUrl: options.baseUrl ?? DEFAULTS.BASE_URL,
+      baseUrl: options.baseUrl || DEFAULTS.BASE_URL,
       timeout: options.timeout,
       retryAttempts: options.retryAttempts,
       debug: options.debug,
@@ -65,7 +65,7 @@ export class PushFloServer {
     // Console API client for channel management
     this.consoleClient = new RestClient({
       apiKey: options.secretKey,
-      baseUrl: options.consoleUrl ?? DEFAULTS.CONSOLE_URL,
+      baseUrl: options.consoleUrl || DEFAULTS.CONSOLE_URL,
       timeout: options.timeout,
       retryAttempts: options.retryAttempts,
       debug: options.debug,
