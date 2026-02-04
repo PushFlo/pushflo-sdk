@@ -475,15 +475,16 @@ describe('PushFloServer Comprehensive Tests', () => {
     describe('publish', () => {
       it('should publish message with default event type', async () => {
         const server = createServer();
-        const now = Date.now();
         mockFetch.mockReturnValue(
           mockResponse({
             success: true,
             data: {
               id: 'msg-123',
               channelSlug: 'test-channel',
+              eventType: 'message',
+              clientId: 'server_123',
               delivered: 5,
-              timestamp: now,
+              createdAt: new Date().toISOString(),
             },
           })
         );
@@ -515,8 +516,10 @@ describe('PushFloServer Comprehensive Tests', () => {
             data: {
               id: 'msg-123',
               channelSlug: 'orders',
+              eventType: 'order.completed',
+              clientId: 'server_123',
               delivered: 10,
-              timestamp: Date.now(),
+              createdAt: new Date().toISOString(),
             },
           })
         );
@@ -546,8 +549,10 @@ describe('PushFloServer Comprehensive Tests', () => {
             data: {
               id: 'msg-123',
               channelSlug: 'test-channel',
+              eventType: 'message',
+              clientId: 'server_123',
               delivered: 1,
-              timestamp: Date.now(),
+              createdAt: new Date().toISOString(),
             },
           })
         );
@@ -592,8 +597,10 @@ describe('PushFloServer Comprehensive Tests', () => {
             data: {
               id: 'msg-123',
               channelSlug: 'empty-channel',
+              eventType: 'message',
+              clientId: 'server_123',
               delivered: 0,
-              timestamp: Date.now(),
+              createdAt: new Date().toISOString(),
             },
           })
         );
@@ -609,29 +616,31 @@ describe('PushFloServer Comprehensive Tests', () => {
     describe('getMessageHistory', () => {
       it('should get message history', async () => {
         const server = createServer();
-        const now = Date.now();
+        const now = new Date().toISOString();
         mockFetch.mockReturnValue(
           mockResponse({
             success: true,
-            data: [
-              {
-                id: 'msg-1',
-                channel: 'test-channel',
-                eventType: 'message',
-                clientId: 'client-123',
-                content: { text: 'Hello' },
-                timestamp: now - 1000,
-              },
-              {
-                id: 'msg-2',
-                channel: 'test-channel',
-                eventType: 'message',
-                clientId: 'client-456',
-                content: { text: 'World' },
-                timestamp: now,
-              },
-            ],
-            pagination: { page: 1, pageSize: 25, total: 2, totalPages: 1 },
+            data: {
+              items: [
+                {
+                  id: 'msg-1',
+                  channel: 'test-channel',
+                  eventType: 'message',
+                  clientId: 'client-123',
+                  content: { text: 'Hello' },
+                  createdAt: now,
+                },
+                {
+                  id: 'msg-2',
+                  channel: 'test-channel',
+                  eventType: 'message',
+                  clientId: 'client-456',
+                  content: { text: 'World' },
+                  createdAt: now,
+                },
+              ],
+              pagination: { page: 1, pageSize: 25, total: 2, totalPages: 1 },
+            },
           })
         );
 
@@ -650,8 +659,10 @@ describe('PushFloServer Comprehensive Tests', () => {
         mockFetch.mockReturnValue(
           mockResponse({
             success: true,
-            data: [],
-            pagination: { page: 1, pageSize: 25, total: 0, totalPages: 0 },
+            data: {
+              items: [],
+              pagination: { page: 1, pageSize: 25, total: 0, totalPages: 0 },
+            },
           })
         );
 
@@ -668,8 +679,10 @@ describe('PushFloServer Comprehensive Tests', () => {
         mockFetch.mockReturnValue(
           mockResponse({
             success: true,
-            data: [],
-            pagination: { page: 1, pageSize: 25, total: 0, totalPages: 0 },
+            data: {
+              items: [],
+              pagination: { page: 1, pageSize: 25, total: 0, totalPages: 0 },
+            },
           })
         );
 
@@ -688,8 +701,10 @@ describe('PushFloServer Comprehensive Tests', () => {
         mockFetch.mockReturnValue(
           mockResponse({
             success: true,
-            data: [],
-            pagination: { page: 2, pageSize: 10, total: 25, totalPages: 3 },
+            data: {
+              items: [],
+              pagination: { page: 2, pageSize: 10, total: 25, totalPages: 3 },
+            },
           })
         );
 

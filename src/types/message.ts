@@ -39,11 +39,17 @@ export interface PublishResult {
   /** Channel slug the message was published to */
   channelSlug: string;
 
+  /** Event type of the message */
+  eventType: string;
+
+  /** Client ID that published the message */
+  clientId: string;
+
   /** Number of subscribers the message was delivered to */
   delivered: number;
 
-  /** Unix timestamp (milliseconds) of when the message was published */
-  timestamp: number;
+  /** ISO 8601 timestamp of when the message was published */
+  createdAt: string;
 }
 
 /**

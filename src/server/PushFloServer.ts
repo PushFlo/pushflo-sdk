@@ -24,7 +24,7 @@ interface ChannelsResponse {
 }
 
 interface MessagesResponse {
-  data: Message[];
+  items: Message[];
   pagination: Pagination;
 }
 
@@ -167,7 +167,7 @@ export class PushFloServer {
     );
 
     return {
-      messages: response.data,
+      messages: response.items,
       pagination: response.pagination,
     };
   }
