@@ -90,4 +90,5 @@ jobs:
           PUSHFLO_SECRET_KEY: ${{ secrets.PUSHFLO_SECRET_KEY }}
           PUSHFLO_MGMT_KEY: ${{ secrets.PUSHFLO_MGMT_KEY }}
           PUSHFLO_PUB_KEY: ${{ secrets.PUSHFLO_PUB_KEY }}
+          PUSHFLO_API_URL: ${{ secrets.PUSHFLO_API_URL }}
         run: npm run test:integration
